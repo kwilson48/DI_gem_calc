@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gem Calculator v7.1 - Fated Trail Update</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            --section-bg: linear-gradient(145deg, #2a2a2a, #333333);
+            --scaling-bg: linear-gradient(145deg, #2d2a3a, #363344);
+            --bucket-bg: linear-gradient(145deg, #2a3a2d, #334436);
+            --primary-color: #ff6b6b;
+            --secondary-color: #ff9f40;
+            --accent-color: #4ecdc4;
+            --purple-color: #bb86fc;
+            --gold-color: #ffd700;
+            --silver-color: #c0c0c0;
+            --strife-color: #ff4444;
+            --leg-color: #ff9f40;
+            --gen-color: #60a5fa;
+            --eff-color: #34d399;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            max-width: 1600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: var(--bg-gradient);
+            color: #e0e0e0; 
+            min-height: 100vh;
+        }
+        
+        h1 { 
+            color: var(--primary-color); 
+            text-align: center; 
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .version-info {
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 25px;
+            font-size: 1em;
+            padding: 15px;
+            background-color: rgba(78, 205, 196, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+        
+        .section { 
+            background: var(--section-bg);
+            padding: 25px; 
+            margin-bottom: 20px; 
+            border-radius: 12px; 
+            border: 1px solid #444; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .bucket-section {
+            background: var(--bucket-bg);
+            border: 1px solid #4a6b4a;
+        }
+        
+        .scaling-section {
+            background: var(--scaling-bg);
+            border: 1px solid #554466;
+        }
+        
+        .strife-section {
+            background: linear-gradient(145deg, #3a2a2a, #442a2a);
+            border: 1px solid #664444;
+        }
+        
+        .input-group { 
+            margin-bottom: 15px; 
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        label { 
+            display: inline-block; 
+            width: 280px; 
+            margin-right: 15px;
+            font-weight: 500;
+        }
+        
+        input[type="number"], select { 
+            width: 120px; 
+            padding: 10px; 
+            background: linear-gradient(145deg, #3a3a3a, #404040);
+            color: #e0e0e0; 
+            border: 1px solid #555; 
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        input[type="range"] {
+            width: 200px;
+        }
+        
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        button { 
+            background: linear-gradient(145deg, #9b59b6, #8e44ad);
+            color: white; 
+            border: none; 
+            padding: 14px 35px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            margin: 15px 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:hover { 
+            background: linear-gradient(145deg, #8e44ad, #7d3c98);
+            transform: translateY(-2px);
+        }
+        
+        button.secondary {
+            background: linear-gradient(145deg, #555, #666);
+        }
+        
+        .tooltip { 
+            color: #aaa; 
+            font-size: 0.85em; 
+            margin-left: 15px;
+            font-style: italic;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid #444;
+            padding-bottom: 12px;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            color: var(--purple-color);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        
+        /* Gem Toggle Grid */
+        .gem-toggle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .gem-toggle {
+            background: linear-gradient(145deg, #333, #3a3a3a);
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .gem-toggle:hover {
+            background: linear-gradient(145deg, #3a3a3a, #444);
+            border-color: #555;
+        }
+        
+        .gem-toggle.active {
+            border-color: var(--gold-color);
+            background: linear-gradient(145deg, #3a3a30, #444430);
+        }
+        
+        .gem-toggle .gem-info {
+            flex: 1;
+            margin-left: 8px;
+        }
+        
+        .gem-toggle .gem-name {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .gem-toggle .gem-name.two-star {
+            color: var(--silver-color);
+        }
+        
+        .gem-toggle .gem-stars {
+            font-size: 0.85em;
+            margin-left: 5px;
+        }
+        
+        .gem-toggle .gem-stars.two-star {
+            color: var(--silver-color);
+        }
+        
+        .gem-toggle .gem-bonus {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        /* Bucket Display */
+        .bucket-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .bucket-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .bucket-item.leg { border-left: 4px solid var(--leg-color); }
+        .bucket-item.total { border-left: 4px solid var(--gold-color); }
+        
+        .bucket-label {
+            font-size: 0.85em;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .bucket-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .bucket-breakdown {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .result-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 0.8em;
+            color: #888;
+            text-transform: uppercase;
+        }
+        
+        .result-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ccc;
+            margin-top: 5px;
+        }
+        
+        .result-value.highlight {
+            color: var(--accent-color);
+        }
+        
+        /* Gem Rankings */
+        .gem-rankings {
+            margin-top: 20px;
+        }
+        
+        .gem-rank-item {
+            background: linear-gradient(145deg, #2a2a2a, #333);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 50px 1fr 150px 150px 150px;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid transparent;
+        }
+        
+        .gem-rank-item.top-3 {
+            border-left-color: var(--gold-color);
+            background: linear-gradient(145deg, #3a3a30, #444430);
+        }
+        
+        .gem-rank-item.active {
+            border-left-color: var(--accent-color);
+        }
+        
+        .gem-rank-item.inactive {
+            opacity: 0.6;
+        }
+        
+        .rank-number {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #666;
+            text-align: center;
+        }
+        
+        .gem-rank-item.top-3 .rank-number {
+            color: var(--gold-color);
+        }
+        
+        .gem-rank-info .name {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .gem-rank-info .name.two-star {
+            color: var(--silver-color);
+        }
+        
+        .gem-rank-info .type {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .gem-rank-value {
+            text-align: right;
+        }
+        
+        .gem-rank-value .value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .gem-rank-value .label {
+            font-size: 0.75em;
+            color: #888;
+            text-transform: uppercase;
+        }
+        
+        .gem-rank-value.positive .value { color: var(--accent-color); }
+        .gem-rank-value.negative .value { color: var(--strife-color); }
+        
+        /* Formula Display */
+        .formula-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .formula-line {
+            margin: 8px 0;
+            color: #ccc;
+        }
+        
+        .formula-line .leg { color: var(--leg-color); }
+        .formula-line .gen { color: var(--gen-color); }
+        .formula-line .eff { color: var(--eff-color); }
+        .formula-line .result { color: var(--accent-color); font-weight: bold; }
+        
+        .strife-indicator {
+            background: rgba(255, 68, 68, 0.2);
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-left: 10px;
+            color: var(--strife-color);
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .rank-display {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-left: 10px;
+            color: var(--gold-color);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .info-box {
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+        
+        .warning-box {
+            background: rgba(255, 159, 64, 0.1);
+            border: 1px solid rgba(255, 159, 64, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.95em;
+            color: var(--secondary-color);
+        }
+        
+        .active-count {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 10px 20px;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 10px 0;
+            font-weight: bold;
+            color: var(--gold-color);
+        }
+        
+        .button-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .scaling-factor {
+            background: rgba(155, 89, 182, 0.1);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-left: 10px;
+            color: var(--purple-color);
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .effective-dps {
+            background: rgba(78, 205, 196, 0.1);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-left: 10px;
+            color: var(--accent-color);
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        #scalingBreakdown {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #scalingBreakdown > div {
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        
+        .scaling-preview {
+            background: rgba(155, 89, 182, 0.05);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .total-scaling {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--purple-color);
+            text-align: center;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(155, 89, 182, 0.1);
+            border-radius: 6px;
+        }
+        
+        .collapsible-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .collapsible-header:hover {
+            opacity: 0.8;
+        }
+        
+        .collapse-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+        
+        .collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .collapsible-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .collapsed .collapsible-content {
+            max-height: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚔️ Gem Calculator v7.0</h1>
+    <p class="subtitle">Full Features Merged - Damage Buckets + Multi-Target + All Gems</p>
+    
+    <div class="version-info">
+        <strong>🎯 v7.1 - Fated Trail Update</strong>
+        <br>📊 <strong>Damage Bucket System:</strong> LEG_mod additive within bucket, multiplicative across buckets
+        <br>🔢 Formula: DMG = (Base + Direct) × LEG_mod (per XP#1948's research)
+        <br>🏆 <strong>Optimal Loadout Finder:</strong> Filter by All / 5★ Only / 2★ Only
+        <br>💎 <strong>22 Gems:</strong> 19 5★ + 3 2★ | <span style="color: var(--gold-color);">NEW: Fated Trail (5★)</span>
+        <br>⭐ <strong>Separate Rank Sliders:</strong> Set different ranks for 5★ and 2★ gems
+        <br>⚡ <strong>Multi-Target Scaling:</strong> Full DPS breakdown with primary/skill/AoE portions
+    </div>
+    
+    <div class="section strife-section">
+        <h2>⚔️ PVP/Strife Settings & Gem Ranks</h2>
+        <div class="input-group">
+            <label style="width: auto;">
+                <input type="checkbox" id="isStrife" />
+                ⚔️ Strife Mode (PVP) - Gem effects reduced by 2/3
+            </label>
+            <span class="strife-indicator" id="strifeIndicator" style="display: none;">STRIFE ACTIVE: Effects ×0.333</span>
+        </div>
+        <div class="input-group">
+            <label><span style="color: var(--gold-color);">★★★★★</span> 5-Star Gem Rank:</label>
+            <input type="range" id="gemRank5Star" min="1" max="10" value="10" />
+            <span class="rank-display" id="gemRank5StarDisplay">Rank 10</span>
+        </div>
+        <div class="input-group">
+            <label><span style="color: var(--silver-color);">★★</span> 2-Star Gem Rank:</label>
+            <input type="range" id="gemRank2Star" min="1" max="10" value="10" />
+            <span class="rank-display" id="gemRank2StarDisplay" style="background: rgba(192, 192, 192, 0.1); color: var(--silver-color);">Rank 10</span>
+        </div>
+        <div class="input-group">
+            <label>Optimizer Gem Filter:</label>
+            <select id="gemFilter" style="width: 180px;">
+                <option value="all" selected>All Gems (22)</option>
+                <option value="5star">5★ Only (19)</option>
+                <option value="2star">2★ Only (3)</option>
+            </select>
+            <span class="tooltip">Which gems to include in optimal finder</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 Character Stats</h2>
+        <div class="input-group">
+            <label>Base Damage:</label>
+            <input type="number" id="baseDamage" value="41000" />
+            <span class="tooltip">Character sheet base damage</span>
+        </div>
+        <div class="input-group">
+            <label>Single-Target DPS (baseline):</label>
+            <input type="number" id="singleTargetDPS" value="1000000" />
+            <span class="tooltip">Your DPS with no legendary gems equipped</span>
+        </div>
+        <div class="input-group">
+            <label>Critical Hit Chance (%):</label>
+            <input type="number" id="critChance" value="30" min="0" max="100" />
+        </div>
+        <div class="input-group">
+            <label>Critical Hit Damage (%):</label>
+            <input type="number" id="critDamage" value="200" min="100" max="1000" />
+        </div>
+        <div class="input-group">
+            <label>Current Life (%):</label>
+            <input type="range" id="currentLifePercent" min="1" max="100" value="85" />
+            <span style="margin-left: 15px; color: var(--secondary-color); font-weight: bold;" id="lifeDisplay">85%</span>
+        </div>
+        <div class="input-group">
+            <label>Max HP:</label>
+            <input type="number" id="maxHP" value="750000" />
+            <span class="tooltip">For Blessing of the Worthy damage</span>
+        </div>
+        <div class="input-group">
+            <label>Druid Form / Primary Type:</label>
+            <select id="druidForm">
+                <option value="1.5">Bear Form (1.5/sec base)</option>
+                <option value="2.0" selected>Wolf Form (2.0/sec base)</option>
+                <option value="1.33">Caster - Slow Skill (1.33/sec base)</option>
+                <option value="1.5">Caster - Fast Skill (1.5/sec base)</option>
+                <option value="1.2">Generic/Other (1.2/sec base)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Attack Speed Modifier (%):</label>
+            <input type="number" id="attackSpeedMod" value="8.4" step="0.1" min="0" max="100" />
+            <span class="effective-dps" id="effectiveAttackSpeedDisplay">2.17/sec</span>
+        </div>
+        <div class="input-group">
+            <label>Enemy Count:</label>
+            <select id="enemyCount">
+                <option value="1" selected>Single Target (1)</option>
+                <option value="3">Small Pack (3)</option>
+                <option value="5">Medium Pack (5)</option>
+                <option value="8">Large Pack (8)</option>
+                <option value="12">Huge Pack (12)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section scaling-section">
+        <div class="collapsible-header" onclick="toggleSection(this)">
+            <h2 style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">📈 Multi-Target DPS Scaling</h2>
+            <span class="collapse-icon">▼</span>
+        </div>
+        <div class="collapsible-content">
+            <h3 style="margin-top: 15px;">DPS Breakdown:</h3>
+            
+            <div class="input-group">
+                <label>Primary Attacks (%):</label>
+                <input type="number" id="primaryPercent" value="50" min="0" max="100" />
+                <select id="primaryScaling" style="width: 140px; margin-left: 10px;">
+                    <option value="0">Single Target</option>
+                    <option value="0.3">Limited AoE</option>
+                    <option value="0.6" selected>Cleave (2-3)</option>
+                    <option value="0.8">Partial AoE</option>
+                    <option value="1.0">Full AoE</option>
+                </select>
+                <span class="scaling-factor" id="primaryScalingDisplay">1.0x</span>
+                <span class="effective-dps" id="primaryEffectiveDisplay">50%</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Single-Target Skills (%):</label>
+                <input type="number" id="singleSkillPercent" value="0" min="0" max="100" />
+                <span class="scaling-factor" id="singleSkillScalingDisplay">1.0x</span>
+                <span class="effective-dps" id="singleSkillEffectiveDisplay">0%</span>
+            </div>
+            
+            <div class="input-group">
+                <label>AoE Skills (%):</label>
+                <input type="number" id="aoeSkillPercent" value="40" min="0" max="100" />
+                <select id="aoeSkillScaling" style="width: 140px; margin-left: 10px;">
+                    <option value="0">Single Target</option>
+                    <option value="0.3">Limited AoE</option>
+                    <option value="0.6">Cleave (2-3)</option>
+                    <option value="0.8" selected>Partial AoE</option>
+                    <option value="1.0">Full AoE</option>
+                </select>
+                <span class="scaling-factor" id="aoeSkillScalingDisplay">1.0x</span>
+                <span class="effective-dps" id="aoeSkillEffectiveDisplay">40%</span>
+            </div>
+            
+            <div class="input-group">
+                <label>DoTs/Summons/Other (%):</label>
+                <input type="number" id="otherPercent" value="10" min="0" max="100" readonly style="background: #2a2a2a;" />
+                <select id="otherScaling" style="width: 140px; margin-left: 10px;">
+                    <option value="0">Single Target</option>
+                    <option value="0.3">Limited AoE</option>
+                    <option value="0.5" selected>Mixed</option>
+                    <option value="0.8">Partial AoE</option>
+                    <option value="1.0">Full AoE</option>
+                </select>
+                <span class="scaling-factor" id="otherScalingDisplay">1.0x</span>
+                <span class="effective-dps" id="otherEffectiveDisplay">10%</span>
+            </div>
+            
+            <div class="scaling-preview">
+                <h3>Multi-Target Effectiveness:</h3>
+                <div id="scalingBreakdown"></div>
+                <div class="total-scaling" id="totalScalingDisplay">
+                    Effective Multi-Target DPS: 1,000,000
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="background: linear-gradient(145deg, #2a3a3a, #334433); border: 1px solid #4a6b4a;">
+        <div class="collapsible-header" onclick="toggleSection(this)">
+            <h2 style="margin-bottom: 0; border-bottom: none; padding-bottom: 0; color: #7dd87d;">⚙️ Advanced Settings</h2>
+            <span class="collapse-icon">▼</span>
+        </div>
+        <div class="collapsible-content">
+            <h3 style="margin-top: 15px;">Hit Frequency Settings:</h3>
+            
+            <div class="input-group">
+                <label>Primary hits per attack cast:</label>
+                <input type="range" id="primaryHitsPerAttack" min="1" max="10" step="0.5" value="1" style="width: 200px;" />
+                <span style="margin-left: 15px; color: #7dd87d; font-weight: bold;" id="primaryHitsDisplay">1x</span>
+                <span class="tooltip">Multi-hit primaries</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Additional single-target hits/sec:</label>
+                <input type="range" id="additionalSingleHits" min="0" max="30" step="1" value="8" style="width: 200px;" />
+                <span style="margin-left: 15px; color: #7dd87d; font-weight: bold;" id="additionalSingleDisplay">8/s</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Additional AoE hits/sec:</label>
+                <input type="range" id="additionalAoeHits" min="0" max="30" step="1" value="6" style="width: 200px;" />
+                <span style="margin-left: 15px; color: #7dd87d; font-weight: bold;" id="additionalAoeDisplay">6/s</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Hit frequency (hits taken/sec):</label>
+                <input type="number" id="hitFrequency" value="3" step="0.5" min="0.5" />
+                <span class="tooltip">For Blessing of the Worthy procs</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🛡️ Build Options</h2>
+        <div class="input-group">
+            <label style="width: auto;">
+                <input type="checkbox" id="hasBuffSkill" checked />
+                Have self-buff skill (Bottled Hope, Colossus Engine)
+            </label>
+        </div>
+        <div class="input-group">
+            <label style="width: auto;">
+                <input type="checkbox" id="hasDashSkill" checked />
+                Have dash skill (Concentrated Will)
+            </label>
+        </div>
+        <div class="input-group">
+            <label style="width: auto;">
+                <input type="checkbox" id="hasVithus" />
+                4pc Vithus (+30% self-buff duration)
+            </label>
+        </div>
+        <div class="input-group">
+            <label style="width: auto;">
+                <input type="checkbox" id="hasFeastingBaron" />
+                2pc Feasting Baron (+30% debuff duration)
+            </label>
+        </div>
+        <div class="input-group">
+            <label style="width: auto;">
+                <input type="checkbox" id="fightingElites" />
+                Fighting Elite monsters (Fervent Fang bonus)
+            </label>
+        </div>
+        <div class="input-group">
+            <label style="width: auto;">
+                <input type="checkbox" id="hasDoTSource" checked />
+                💀 Has DoT source (for Pain Clasp)
+            </label>
+        </div>
+        <div class="input-group" id="dotUptimeGroup">
+            <label>DoT uptime on enemies (%):</label>
+            <input type="range" id="dotUptime" min="0" max="100" step="5" value="70" style="width: 200px;" />
+            <span style="margin-left: 15px; color: #bb86fc; font-weight: bold;" id="dotUptimeDisplay">70%</span>
+        </div>
+    </div>
+
+    <div class="section bucket-section">
+        <h2>💎 Select Your Gems</h2>
+        <p style="color: #888; margin-bottom: 15px;">
+            Toggle gems on/off. Active gems contribute to your LEG_mod bucket.
+            <br><strong>Note:</strong> Gems in the same bucket are additive - each additional % is worth less!
+        </p>
+        
+        <div class="button-row">
+            <button onclick="selectPreset('all')" class="secondary">Select All</button>
+            <button onclick="selectPreset('none')" class="secondary">Clear All</button>
+        </div>
+        
+        <div class="active-count" id="activeCount">0 Gems Active</div>
+        
+        <div class="gem-toggle-grid" id="gemToggles"></div>
+    </div>
+
+    <div class="button-row">
+        <button onclick="calculateAll()">🔥 Calculate Current Loadout</button>
+        <button onclick="findOptimal8()" style="background: linear-gradient(145deg, #f59e0b, #d97706);">🏆 Find Optimal 8 Gems</button>
+    </div>
+    
+    <div class="section" id="optimizerResults" style="display: none;">
+        <h2>🏆 Optimal Loadout Finder</h2>
+        <div class="info-box" id="optimizerStatus">Calculating...</div>
+        <div id="optimizerOutput"></div>
+    </div>
+
+    <div class="section" id="results" style="display: none;">
+        <h2>📊 Results - Damage Bucket Analysis</h2>
+        
+        <div class="bucket-display" id="bucketDisplay"></div>
+        
+        <div class="formula-display" id="formulaDisplay"></div>
+        
+        <div class="results-grid" id="resultsGrid"></div>
+        
+        <h3 style="margin-top: 30px;">💎 Gem Value Rankings</h3>
+        <p style="color: #888; margin-bottom: 15px;">
+            <strong>Active gems:</strong> Total Value = what you'd LOSE by removing (8→7 gems)<br>
+            <strong>Inactive gems:</strong> Total Value = what you'd GAIN by adding (8→9 gems)<br>
+            <span style="color: var(--secondary-color);">⚠️ To compare swapping gems, use the optimizer!</span>
+        </p>
+        
+        <div class="gem-rankings" id="gemRankings"></div>
+    </div>
+
+    <script>
+        // ===========================================
+        // WIKI-ACCURATE GEM DATA - ALL 21 GEMS
+        // ===========================================
+        
+        const GEM_DATA = {
+            bloodSoakedJade: {
+                name: "Blood-Soaked Jade",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [8, 0], 2: [10.5, 0], 3: [10.5, 2], 4: [13.5, 2], 5: [13.5, 4],
+                    6: [17, 4], 7: [17, 6], 8: [20.5, 6], 9: [20.5, 8], 10: [24, 8]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [maxDmg, dr] = GEM_DATA.bloodSoakedJade.values[rank];
+                    if (isStrife) maxDmg *= (1/3);
+                    const lifeRatio = stats.currentLifePercent / 100;
+                    const minDmg = maxDmg / 2;
+                    return minDmg + (maxDmg - minDmg) * lifeRatio;
+                },
+                getDirectDPS: (rank, isStrife, stats) => 0,
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.bloodSoakedJade.getLegBonus(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% damage (at ${stats.currentLifePercent}% HP)`;
+                }
+            },
+            
+            bottledHope: {
+                name: "Bottled Hope",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [8, 0], 2: [10.5, 0], 3: [10.5, 1.5], 4: [13.5, 1.5], 5: [13.5, 3],
+                    6: [17, 3], 7: [17, 4.5], 8: [20.5, 4.5], 9: [20.5, 6], 10: [24, 6]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    if (!stats.hasBuffSkill) return 0;
+                    let [dmg, cdr] = GEM_DATA.bottledHope.values[rank];
+                    if (isStrife) { dmg *= (1/3); cdr *= (1/3); }
+                    
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const uptime = duration / 20;
+                    let totalBonus = dmg * uptime;
+                    
+                    if (cdr > 0) {
+                        const cdrDecimal = cdr / 100;
+                        const cdrMultiplier = (1 / (1 - cdrDecimal)) - 1;
+                        const skillPortion = 1 - (stats.primaryPercent / 100);
+                        totalBonus += cdrMultiplier * 100 * skillPortion;
+                    }
+                    
+                    return totalBonus;
+                },
+                getDirectDPS: (rank, isStrife, stats) => 0,
+                getDescription: (rank, isStrife, stats) => {
+                    if (!stats.hasBuffSkill) return "Inactive (no buff skill)";
+                    let [dmg, cdr] = GEM_DATA.bottledHope.values[rank];
+                    if (isStrife) { dmg *= (1/3); cdr *= (1/3); }
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const uptime = duration / 20;
+                    const dmgBonus = dmg * uptime;
+                    if (cdr > 0) {
+                        return `+${dmgBonus.toFixed(1)}% dmg + ${cdr.toFixed(1)}% CDR`;
+                    }
+                    return `+${dmgBonus.toFixed(1)}% damage`;
+                }
+            },
+            
+            mawOfTheDeep: {
+                name: "Maw of the Deep",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [140, 0], 2: [180, 0], 3: [180, 6], 4: [240, 6], 5: [240, 12],
+                    6: [310, 12], 7: [310, 18], 8: [380, 18], 9: [380, 24], 10: [450, 24]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [baseDmg, amp] = GEM_DATA.mawOfTheDeep.values[rank];
+                    if (isStrife) amp *= (1/3);
+                    const duration = stats.hasFeastingBaron ? 7.8 : 6;
+                    const uptime = duration / 20;
+                    return amp * uptime;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [baseDmg, amp] = GEM_DATA.mawOfTheDeep.values[rank];
+                    if (isStrife) baseDmg *= (1/3);
+                    const flatBonus = isStrife ? 1701 * (1/3) : 1701;
+                    const explosionDamage = stats.baseDamage * (baseDmg / 100) + flatBonus;
+                    return (explosionDamage * stats.enemyCount) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.mawOfTheDeep.getLegBonus(rank, isStrife, stats);
+                    const directDPS = GEM_DATA.mawOfTheDeep.getDirectDPS(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% amp + ${Math.round(directDPS).toLocaleString()} DPS`;
+                }
+            },
+            
+            gloomCask: {
+                name: "Gloom Cask",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [30, 0], 2: [36, 0], 3: [36, 6], 4: [42, 6], 5: [42, 12],
+                    6: [50, 12], 7: [50, 18], 8: [58, 18], 9: [58, 24], 10: [68, 24]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [bladeDmg, primaryInc] = GEM_DATA.gloomCask.values[rank];
+                    if (isStrife) primaryInc *= (1/3);
+                    const bladeDuration = stats.hasVithus ? 7.8 : 6;
+                    const buffDuration = stats.hasFeastingBaron ? 3.9 : 3;
+                    const uptime = Math.min(1, (bladeDuration + buffDuration) / 20);
+                    const primaryPortion = stats.primaryPercent / 100;
+                    return primaryInc * uptime * primaryPortion;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [bladeDmg, primaryInc] = GEM_DATA.gloomCask.values[rank];
+                    if (isStrife) bladeDmg *= (1/3);
+                    const flatBonus = isStrife ? 275 * (1/3) : 275;
+                    const damage = stats.baseDamage * (bladeDmg / 100) + flatBonus;
+                    const bladeDuration = stats.hasVithus ? 7.8 : 6;
+                    const totalBlades = stats.attackSpeed * bladeDuration;
+                    return (damage * totalBlades * stats.enemyCount) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.gloomCask.getLegBonus(rank, isStrife, stats);
+                    const directDPS = GEM_DATA.gloomCask.getDirectDPS(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% primary + ${Math.round(directDPS).toLocaleString()} blade DPS`;
+                }
+            },
+            
+            bloodFloe: {
+                name: "Blood Floe",
+                stars: 5,
+                category: "mixed",
+                values: {
+                    1: [9, 0], 2: [11, 0], 3: [11, 1], 4: [13, 1], 5: [13, 2],
+                    6: [16, 2], 7: [16, 3], 8: [18, 3], 9: [18, 4], 10: [20, 4]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [dmgBonus, critPerEnemy] = GEM_DATA.bloodFloe.values[rank];
+                    if (isStrife) dmgBonus *= (1/3);
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const uptime = duration / 20;
+                    
+                    let totalBonus = dmgBonus * uptime;
+                    
+                    let critDmgBonus = dmgBonus * 2;
+                    if (isStrife) critDmgBonus *= (1/3);
+                    const baseCritChance = stats.critChance / 100;
+                    const critDmgIncrease = baseCritChance * (critDmgBonus / 100) * 100;
+                    totalBonus += critDmgIncrease * uptime;
+                    
+                    if (critPerEnemy > 0) {
+                        let critChanceBonus = critPerEnemy;
+                        if (isStrife) critChanceBonus *= (1/3);
+                        const bleedingEnemies = Math.min(4, stats.enemyCount);
+                        const totalCritBonus = critChanceBonus * bleedingEnemies;
+                        const baseCritDmg = stats.critDamage / 100;
+                        const oldMult = 1 + baseCritChance * (baseCritDmg - 1);
+                        const newCritChance = Math.min(1, baseCritChance + totalCritBonus / 100);
+                        const newMult = 1 + newCritChance * (baseCritDmg - 1);
+                        const critChanceIncrease = ((newMult / oldMult) - 1) * 100;
+                        totalBonus += critChanceIncrease * uptime;
+                    }
+                    
+                    return totalBonus;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    const bleedPerSec = stats.baseDamage * 0.10;
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const bleedUptime = Math.min(1, stats.critChance / 100 * 3);
+                    const bleedDamagePerCycle = bleedPerSec * duration * bleedUptime * stats.enemyCount;
+                    return bleedDamagePerCycle / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    let [dmgBonus, critPerEnemy] = GEM_DATA.bloodFloe.values[rank];
+                    if (isStrife) { dmgBonus *= (1/3); critPerEnemy *= (1/3); }
+                    const bleedingEnemies = Math.min(4, stats.enemyCount);
+                    const totalCritBonus = critPerEnemy * bleedingEnemies;
+                    return `+${dmgBonus.toFixed(0)}% dmg, +${(dmgBonus*2).toFixed(0)}% critD, +${totalCritBonus.toFixed(0)}% critC`;
+                }
+            },
+            
+            colossusEngine: {
+                name: "Colossus Engine",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [15, 0], 2: [21, 0], 3: [21, 1.2], 4: [27, 1.2], 5: [27, 2.4],
+                    6: [34, 2.4], 7: [34, 3.6], 8: [42, 3.6], 9: [42, 4.8], 10: [50, 4.8]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    if (!stats.hasBuffSkill) return 0;
+                    let [skillDmg, kbImmunity] = GEM_DATA.colossusEngine.values[rank];
+                    if (isStrife) skillDmg *= (1/3);
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const uptime = duration / 20;
+                    const skillPortion = 1 - (stats.primaryPercent / 100);
+                    return skillDmg * uptime * skillPortion;
+                },
+                getDirectDPS: (rank, isStrife, stats) => 0,
+                getDescription: (rank, isStrife, stats) => {
+                    if (!stats.hasBuffSkill) return "Inactive (no buff skill)";
+                    const bonus = GEM_DATA.colossusEngine.getLegBonus(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% skill damage`;
+                }
+            },
+            
+            roilingConsequence: {
+                name: "Roiling Consequence",
+                stars: 5,
+                category: "crit",
+                values: {
+                    1: [12, 0], 2: [18, 0], 3: [18, 3], 4: [24, 3], 5: [24, 6],
+                    6: [30, 6], 7: [30, 9], 8: [36, 9], 9: [36, 12], 10: [42, 12]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [critChance, burnCrit] = GEM_DATA.roilingConsequence.values[rank];
+                    if (isStrife) { critChance *= (1/3); burnCrit *= (1/3); }
+                    
+                    const baseCrit = stats.critChance / 100;
+                    const newCrit = Math.min(1, baseCrit + critChance/100);
+                    const critDmg = stats.critDamage / 100;
+                    
+                    const oldMultiplier = 1 + baseCrit * (critDmg - 1);
+                    const newMultiplier = 1 + newCrit * (critDmg - 1);
+                    
+                    return ((newMultiplier / oldMultiplier) - 1) * 100;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    const burnDamage = stats.baseDamage * 0.36;
+                    return (burnDamage * stats.enemyCount) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.roilingConsequence.getLegBonus(rank, isStrife, stats);
+                    return `~${bonus.toFixed(1)}% effective (via crit) + burn`;
+                }
+            },
+            
+            hauntCoil: {
+                name: "Haunt Coil",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [20, 0], 2: [24, 0], 3: [24, 10], 4: [28, 10], 5: [28, 20],
+                    6: [33, 20], 7: [33, 30], 8: [39, 30], 9: [39, 40], 10: [45, 40]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [dmgInc, blastDmg] = GEM_DATA.hauntCoil.values[rank];
+                    if (isStrife) dmgInc *= (1/3);
+                    const uptime = 0.5;
+                    return dmgInc * uptime;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [dmgInc, blastDmg] = GEM_DATA.hauntCoil.values[rank];
+                    if (isStrife) blastDmg *= (1/3);
+                    if (blastDmg === 0) return 0;
+                    const damage = stats.baseDamage * (blastDmg / 100);
+                    const duration = stats.hasFeastingBaron ? 7.8 : 6;
+                    const blastsPerHaunt = Math.floor(duration / 2);
+                    return (damage * blastsPerHaunt * Math.max(1, stats.enemyCount - 1)) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.hauntCoil.getLegBonus(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% vs haunted + blasts`;
+                }
+            },
+            
+            ferventFang: {
+                name: "Fervent Fang",
+                stars: 2,
+                category: "leg",
+                values: {
+                    1: [0.8, 0], 2: [1.05, 0], 3: [1.05, 1.5], 4: [1.35, 1.5], 5: [1.35, 3],
+                    6: [1.7, 3], 7: [1.7, 4.5], 8: [2.1, 4.5], 9: [2.1, 6], 10: [2.4, 6]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [perStack, elite] = GEM_DATA.ferventFang.values[rank];
+                    if (isStrife) { perStack *= (1/3); elite *= (1/3); }
+                    const maxStacks = 10;
+                    let bonus = perStack * maxStacks;
+                    if (stats.fightingElites) bonus += elite;
+                    return bonus;
+                },
+                getDirectDPS: (rank, isStrife, stats) => 0,
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.ferventFang.getLegBonus(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% damage (10 stacks)`;
+                }
+            },
+            
+            howlersCall: {
+                name: "Howler's Call",
+                stars: 5,
+                category: "direct",
+                values: {
+                    1: [150, 0], 2: [180, 0], 3: [180, 12], 4: [220, 12], 5: [220, 24],
+                    6: [260, 24], 7: [260, 36], 8: [310, 36], 9: [310, 48], 10: [360, 48]
+                },
+                getLegBonus: (rank, isStrife, stats) => 0,
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [wolfDmg, stun] = GEM_DATA.howlersCall.values[rank];
+                    if (isStrife) wolfDmg *= (1/3);
+                    const flatBonus = isStrife ? 1458 * (1/3) : 1458;
+                    const damage = stats.baseDamage * (wolfDmg / 100) + flatBonus;
+                    return (damage * stats.enemyCount) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const directDPS = GEM_DATA.howlersCall.getDirectDPS(rank, isStrife, stats);
+                    return `${Math.round(directDPS).toLocaleString()} wolf DPS`;
+                }
+            },
+            
+            spitefulBlood: {
+                name: "Spiteful Blood",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [4, 0], 2: [8, 0], 3: [8, 40], 4: [12, 40], 5: [12, 80],
+                    6: [18, 80], 7: [18, 120], 8: [24, 120], 9: [24, 160], 10: [30, 160]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [dmg, shield] = GEM_DATA.spitefulBlood.values[rank];
+                    if (isStrife) dmg *= (1/3);
+                    const triggerChance = stats.currentLifePercent <= 50 ? 1.0 : 
+                                         stats.currentLifePercent <= 60 ? 0.5 : 0.1;
+                    const duration = stats.hasVithus ? 5.2 : 4;
+                    const uptime = (duration / 20) * triggerChance;
+                    return dmg * uptime;
+                },
+                getDirectDPS: (rank, isStrife, stats) => 0,
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.spitefulBlood.getLegBonus(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% damage (at ${stats.currentLifePercent}% HP)`;
+                }
+            },
+            
+            concentratedWill: {
+                name: "Concentrated Will",
+                stars: 5,
+                category: "leg",
+                values: {
+                    1: [55, 0], 2: [65, 0], 3: [65, 4], 4: [80, 4], 5: [80, 8],
+                    6: [100, 8], 7: [100, 12], 8: [115, 12], 9: [115, 16], 10: [135, 16]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    if (!stats.hasDashSkill) return 0;
+                    let [blastDmg, dmgBuff] = GEM_DATA.concentratedWill.values[rank];
+                    if (isStrife) dmgBuff *= (1/3);
+                    const buffDuration = stats.hasVithus ? 2.6 : 2;
+                    const uptime = (buffDuration * 3) / 20;
+                    return dmgBuff * uptime;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    if (!stats.hasDashSkill) return 0;
+                    let [blastDmg, dmgBuff] = GEM_DATA.concentratedWill.values[rank];
+                    if (isStrife) blastDmg *= (1/3);
+                    const flatBonus = isStrife ? 547 * (1/3) : 547;
+                    const damage = stats.baseDamage * (blastDmg / 100) + flatBonus;
+                    const procs = 3;
+                    return (damage * stats.enemyCount * procs) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    if (!stats.hasDashSkill) return "Inactive (no dash skill)";
+                    const bonus = GEM_DATA.concentratedWill.getLegBonus(rank, isStrife, stats);
+                    const directDPS = GEM_DATA.concentratedWill.getDirectDPS(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% + ${Math.round(directDPS).toLocaleString()} blast DPS`;
+                }
+            },
+            
+            goldenFirmament: {
+                name: "Golden Firmament",
+                stars: 5,
+                category: "direct",
+                values: {
+                    1: [45, 0], 2: [55, 0], 3: [55, 3], 4: [65, 3], 5: [65, 6],
+                    6: [80, 6], 7: [80, 9], 8: [95, 9], 9: [95, 12], 10: [110, 12]
+                },
+                getLegBonus: (rank, isStrife, stats) => 0,
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [blastDmg, evasion] = GEM_DATA.goldenFirmament.values[rank];
+                    if (isStrife) blastDmg *= (1/3);
+                    const flatBonus = isStrife ? 486 * (1/3) : 486;
+                    const damage = stats.baseDamage * (blastDmg / 100) + flatBonus;
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const totalBlasts = 3 * duration;
+                    let totalDamage;
+                    if (stats.enemyCount === 1) {
+                        const cycles = Math.floor(totalBlasts / 3);
+                        totalDamage = damage * cycles * 1.5;
+                    } else {
+                        totalDamage = damage * Math.min(stats.enemyCount, totalBlasts);
+                    }
+                    return totalDamage / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const directDPS = GEM_DATA.goldenFirmament.getDirectDPS(rank, isStrife, stats);
+                    return `${Math.round(directDPS).toLocaleString()} wind blast DPS`;
+                }
+            },
+            
+            wulfheort: {
+                name: "Wulfheort",
+                stars: 5,
+                category: "mixed",
+                values: {
+                    1: [40, 0], 2: [50, 0], 3: [50, 3.5], 4: [60, 3.5], 5: [60, 7],
+                    6: [70, 7], 7: [70, 10.5], 8: [80, 10.5], 9: [80, 14], 10: [95, 14]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [slashDmg, asBonus] = GEM_DATA.wulfheort.values[rank];
+                    if (isStrife) asBonus *= (1/3);
+                    const duration = stats.hasVithus ? 3.9 : 3;
+                    const uptime = duration / 20;
+                    const primaryPortion = stats.primaryPercent / 100;
+                    return asBonus * uptime * primaryPortion;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [slashDmg, asBonus] = GEM_DATA.wulfheort.values[rank];
+                    if (isStrife) slashDmg *= (1/3);
+                    const flatBonus = isStrife ? 385 * (1/3) : 385;
+                    const damage = stats.baseDamage * (slashDmg / 100) + flatBonus;
+                    const procs = 3 * stats.enemyCount;
+                    return (damage * procs) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.wulfheort.getLegBonus(rank, isStrife, stats);
+                    const directDPS = GEM_DATA.wulfheort.getDirectDPS(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% AS + ${Math.round(directDPS).toLocaleString()} slash DPS`;
+                }
+            },
+            
+            voidSpark: {
+                name: "Void Spark",
+                stars: 5,
+                category: "mixed",
+                values: {
+                    1: [45, 0], 2: [55, 0], 3: [55, 4], 4: [65, 4], 5: [65, 8],
+                    6: [80, 8], 7: [80, 12], 8: [95, 12], 9: [95, 16], 10: [110, 16]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [lightningDmg, asBonus] = GEM_DATA.voidSpark.values[rank];
+                    if (isStrife) asBonus *= (1/3);
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const uptime = duration / 20;
+                    const primaryPortion = stats.primaryPercent / 100;
+                    return asBonus * uptime * primaryPortion;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [lightningDmg, asBonus] = GEM_DATA.voidSpark.values[rank];
+                    if (isStrife) lightningDmg *= (1/3);
+                    const flatBonus = isStrife ? 446 * (1/3) : 446;
+                    const damage = stats.baseDamage * (lightningDmg / 100) + flatBonus;
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    const procs = duration * 0.7;
+                    const chains = Math.min(8, stats.enemyCount);
+                    return (damage * procs * chains) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const bonus = GEM_DATA.voidSpark.getLegBonus(rank, isStrife, stats);
+                    const directDPS = GEM_DATA.voidSpark.getDirectDPS(rank, isStrife, stats);
+                    return `+${bonus.toFixed(1)}% AS + ${Math.round(directDPS).toLocaleString()} lightning DPS`;
+                }
+            },
+            
+            seepingBile: {
+                name: "Seeping Bile",
+                stars: 5,
+                category: "direct",
+                values: {
+                    1: [25, 0], 2: [30, 0], 3: [30, 6], 4: [35, 6], 5: [35, 12],
+                    6: [45, 12], 7: [45, 18], 8: [55, 18], 9: [55, 24], 10: [65, 24]
+                },
+                getLegBonus: (rank, isStrife, stats) => 0,
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [poisonPerSec, msSlow] = GEM_DATA.seepingBile.values[rank];
+                    if (isStrife) poisonPerSec *= (1/3);
+                    const flatBonus = isStrife ? 263 * (1/3) : 263;
+                    const damagePerSec = stats.baseDamage * (poisonPerSec / 100) + flatBonus;
+                    const totalDamage = damagePerSec * 6;
+                    const poisonedTargets = Math.min(stats.enemyCount, 1.5);
+                    return (totalDamage * poisonedTargets) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const directDPS = GEM_DATA.seepingBile.getDirectDPS(rank, isStrife, stats);
+                    return `${Math.round(directDPS).toLocaleString()} poison DPS`;
+                }
+            },
+            
+            starfireShard: {
+                name: "Starfire Shard",
+                stars: 5,
+                category: "direct",
+                values: {
+                    1: [200, 0], 2: [240, 0], 3: [240, 10], 4: [300, 10], 5: [300, 20],
+                    6: [360, 20], 7: [360, 30], 8: [420, 30], 9: [420, 40], 10: [500, 40]
+                },
+                getLegBonus: (rank, isStrife, stats) => 0,
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [meteorDmg, burnPerSec] = GEM_DATA.starfireShard.values[rank];
+                    if (isStrife) { meteorDmg *= (1/3); burnPerSec *= (1/3); }
+                    const flatBonus = isStrife ? 2026 * (1/3) : 2026;
+                    const meteorDamage = stats.baseDamage * (meteorDmg / 100) + flatBonus;
+                    const burnDamage = stats.baseDamage * (burnPerSec / 100) * 2;
+                    return ((meteorDamage + burnDamage) * stats.enemyCount) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const directDPS = GEM_DATA.starfireShard.getDirectDPS(rank, isStrife, stats);
+                    return `${Math.round(directDPS).toLocaleString()} meteor DPS`;
+                }
+            },
+            
+            hellfireFragment: {
+                name: "Hellfire Fragment",
+                stars: 5,
+                category: "direct",
+                values: {
+                    1: [45, 0], 2: [54, 0], 3: [54, 12.5], 4: [67, 12.5], 5: [67, 25],
+                    6: [80, 25], 7: [80, 37.5], 8: [94, 37.5], 9: [94, 50], 10: [108, 50]
+                },
+                getLegBonus: (rank, isStrife, stats) => 0,
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [blazeDmg, subsequentBonus] = GEM_DATA.hellfireFragment.values[rank];
+                    if (isStrife) blazeDmg *= (1/3);
+                    const flatBonus = isStrife ? 510 * (1/3) : 510;
+                    const damage = stats.baseDamage * (blazeDmg / 100) + flatBonus;
+                    const blazes = 3;
+                    const hits = Math.min(stats.enemyCount, blazes);
+                    return (damage * hits) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const directDPS = GEM_DATA.hellfireFragment.getDirectDPS(rank, isStrife, stats);
+                    return `${Math.round(directDPS).toLocaleString()} hellfire DPS`;
+                }
+            },
+            
+            blessingOfTheWorthy: {
+                name: "Blessing of the Worthy",
+                stars: 5,
+                category: "direct",
+                values: {
+                    1: [12, 0], 2: [14, 0], 3: [14, 4], 4: [17, 4], 5: [17, 8],
+                    6: [21, 8], 7: [21, 12], 8: [25, 12], 9: [25, 16], 10: [28, 16]
+                },
+                getLegBonus: (rank, isStrife, stats) => 0,
+                getDirectDPS: (rank, isStrife, stats) => {
+                    let [lifeDmg, dr] = GEM_DATA.blessingOfTheWorthy.values[rank];
+                    if (isStrife) lifeDmg *= (1/3);
+                    const currentLife = stats.maxHP * (stats.currentLifePercent / 100);
+                    const damage = currentLife * (lifeDmg / 100);
+                    return (damage * stats.enemyCount) / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    const directDPS = GEM_DATA.blessingOfTheWorthy.getDirectDPS(rank, isStrife, stats);
+                    return `${Math.round(directDPS).toLocaleString()} retribution DPS`;
+                }
+            },
+            
+            // Fated Trail (5★) - Bramble damage + Armor Break debuff
+            // Dealing damage grants Rampant Growth (self-buff) for 6 seconds
+            // During Rampant Growth: brambles deal 10% max HP/sec to nearby enemies
+            // Armor break: +4% damage per stack, stacks to 6 (24% max), 2s per stack
+            // Rampant Growth duration: extended by Vithus (self-buff)
+            // Armor break duration: extended by Feasting Baron's (debuff on enemy), NOT Vithus
+            // 20s ICD, triggers on dealing damage
+            fatedTrail: {
+                name: "Fated Trail",
+                stars: 5,
+                category: "mixed",
+                // [HP% damage per tick, armor break % per stack, max stacks]
+                // Rank 1 values from wiki, others estimated (need wiki data)
+                values: {
+                    1: [10, 4, 6], 2: [10, 4, 6], 3: [10, 4, 6], 4: [10, 4, 6], 5: [10, 4, 6],
+                    6: [10, 4, 6], 7: [10, 4, 6], 8: [10, 4, 6], 9: [10, 4, 6], 10: [10, 4, 6]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    // Armor break = enemies take X% more damage from you (debuff)
+                    // Stacks 4% per tick up to 24% max (6 stacks)
+                    // Stack duration: 2s base, extended by Feasting Baron's to 2.6s
+                    // NOT extended by Vithus (it's a debuff on enemy)
+                    
+                    let [hpPercent, breakPerStack, maxStacks] = GEM_DATA.fatedTrail.values[rank];
+                    let maxArmorBreak = breakPerStack * maxStacks; // 24% at rank 1
+                    if (isStrife) maxArmorBreak *= (1/3);
+                    
+                    // Rampant Growth duration (self-buff) - Vithus extends this
+                    const rampantGrowthDuration = stats.hasVithus ? 7.8 : 6;
+                    
+                    // Stack duration (debuff on enemy) - Feasting Baron's extends this
+                    const stackDuration = stats.hasFeastingBaron ? 2.6 : 2;
+                    
+                    // Ticks during Rampant Growth (1 per second)
+                    const ticksDuringBuff = Math.floor(rampantGrowthDuration);
+                    
+                    // Time to reach max stacks (6 ticks needed)
+                    const timeToMax = maxStacks; // 6 seconds
+                    
+                    // Calculate armor break phases over 20s cycle:
+                    // Phase 1: Ramp (0 to timeToMax or end of buff, whichever first)
+                    // Phase 2: Sustain at max (if buff lasts longer than ramp)
+                    // Phase 3: Debuff persists after buff ends (for stackDuration)
+                    
+                    const rampTime = Math.min(timeToMax, rampantGrowthDuration);
+                    const rampAvg = maxArmorBreak * (rampTime / timeToMax) / 2; // Linear ramp average
+                    
+                    let sustainTime = 0;
+                    if (rampantGrowthDuration > timeToMax) {
+                        // Time at max during buff
+                        sustainTime = rampantGrowthDuration - timeToMax;
+                    }
+                    // Debuff persists after buff ends
+                    sustainTime += stackDuration;
+                    
+                    // Total "percent-seconds" of armor break
+                    const rampValue = rampAvg * rampTime;
+                    const sustainValue = maxArmorBreak * sustainTime;
+                    const totalValue = rampValue + sustainValue;
+                    
+                    // Average over 20s cycle
+                    const avgArmorBreak = totalValue / 20;
+                    
+                    return avgArmorBreak;
+                },
+                getDirectDPS: (rank, isStrife, stats) => {
+                    // 10% of max HP as damage to each enemy per tick
+                    // Ticks once per second during Rampant Growth
+                    let [hpPercent, breakPerStack, maxStacks] = GEM_DATA.fatedTrail.values[rank];
+                    if (isStrife) hpPercent *= (1/3);
+                    
+                    const damagePerTick = stats.maxHP * (hpPercent / 100);
+                    
+                    // Rampant Growth duration (self-buff) - Vithus extends this
+                    const rampantGrowthDuration = stats.hasVithus ? 7.8 : 6;
+                    
+                    // Total ticks during buff (1 per second per enemy)
+                    const totalTicks = Math.floor(rampantGrowthDuration);
+                    const totalDamage = damagePerTick * totalTicks * stats.enemyCount;
+                    
+                    return totalDamage / 20;
+                },
+                getDescription: (rank, isStrife, stats) => {
+                    let [hpPercent, breakPerStack, maxStacks] = GEM_DATA.fatedTrail.values[rank];
+                    const maxArmorBreak = breakPerStack * maxStacks;
+                    if (isStrife) { hpPercent *= (1/3); }
+                    const displayBreak = isStrife ? maxArmorBreak * (1/3) : maxArmorBreak;
+                    const directDPS = GEM_DATA.fatedTrail.getDirectDPS(rank, stats.isStrife, stats);
+                    const avgBreak = GEM_DATA.fatedTrail.getLegBonus(rank, stats.isStrife, stats);
+                    const duration = stats.hasVithus ? 7.8 : 6;
+                    return `${hpPercent.toFixed(0)}% HP/tick (${duration}s), avg ${avgBreak.toFixed(1)}% break`;
+                }
+            },
+            
+            // =======================================
+            // NEW 2-STAR GEMS FROM v5.2
+            // =======================================
+            
+            grimRhythm: {
+                name: "Grim Rhythm",
+                stars: 2,
+                category: "mixed",
+                values: {
+                    1: [0.8, 0], 2: [1.1, 0], 3: [1.1, 3], 4: [1.4, 3], 5: [1.4, 6],
+                    6: [1.7, 6], 7: [1.7, 9], 8: [2, 9], 9: [2, 12], 10: [2.4, 12]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    let [asPerStack, msAtFullStacks] = GEM_DATA.grimRhythm.values[rank];
+                    if (isStrife) asPerStack *= (1/3);
+                    
+                    const attackSpeedPerStack = asPerStack / 100;
+                    const maxStacks = 10;
+                    
+                    // Calculate realistic stack count
+                    const hitsPerSecond = (stats.attackSpeed * stats.primaryHitsPerAttack) + 
+                                         stats.additionalSingleHits + 
+                                         (stats.additionalAoeHits * Math.min(stats.enemyCount, 3));
+                    
+                    const timeToMaxStacks = maxStacks / Math.max(0.1, hitsPerSecond);
+                    
+                    let avgStacks;
+                    if (timeToMaxStacks >= 20) {
+                        avgStacks = (hitsPerSecond * 20) / 2;
+                    } else {
+                        const rampPhaseAvg = maxStacks / 2;
+                        const sustainPhaseStacks = maxStacks;
+                        const sustainTime = 20 - timeToMaxStacks;
+                        avgStacks = (rampPhaseAvg * timeToMaxStacks + sustainPhaseStacks * sustainTime) / 20;
+                    }
+                    avgStacks = Math.min(maxStacks, avgStacks);
+                    
+                    // Attack speed bonus from stacks - converts to effective damage
+                    const avgASBonus = attackSpeedPerStack * avgStacks;
+                    const primaryPortion = stats.primaryPercent / 100;
+                    
+                    // AS multiplies primary damage
+                    return avgASBonus * 100 * primaryPortion;
+                },
+                getDirectDPS: (rank, isStrife, stats) => 0,
+                getDescription: (rank, isStrife, stats) => {
+                    let [asPerStack, msAtFullStacks] = GEM_DATA.grimRhythm.values[rank];
+                    if (isStrife) asPerStack *= (1/3);
+                    const maxAS = asPerStack * 10;
+                    return `+${maxAS.toFixed(1)}% AS at 10 stacks`;
+                }
+            },
+            
+            painClasp: {
+                name: "Pain Clasp",
+                stars: 2,
+                category: "leg",
+                values: {
+                    1: [8, 0], 2: [10.5, 0], 3: [10.5, 1.5], 4: [13, 1.5], 5: [13, 3],
+                    6: [16, 3], 7: [16, 4.5], 8: [20, 4.5], 9: [20, 6], 10: [24, 6]
+                },
+                getLegBonus: (rank, isStrife, stats) => {
+                    if (!stats.hasDoTSource) return 0;
+                    
+                    let [damageVsDoTPercent, msNearDoT] = GEM_DATA.painClasp.values[rank];
+                    if (isStrife) damageVsDoTPercent *= (1/3);
+                    
+                    const dotUptime = stats.dotUptime / 100;
+                    return damageVsDoTPercent * dotUptime;
+                },
+                getDirectDPS: (rank, isStrife, stats) => 0,
+                getDescription: (rank, isStrife, stats) => {
+                    if (!stats.hasDoTSource) return "Inactive (no DoT source)";
+                    let [damageVsDoTPercent, msNearDoT] = GEM_DATA.painClasp.values[rank];
+                    if (isStrife) damageVsDoTPercent *= (1/3);
+                    const effective = damageVsDoTPercent * (stats.dotUptime / 100);
+                    return `+${effective.toFixed(1)}% damage (${stats.dotUptime}% uptime)`;
+                }
+            }
+        };
+        
+        // Track active gems
+        let activeGems = new Set();
+        
+        // Store optimal combos for Apply button
+        window.lastOptimalCombo = null;
+        window.lastTopCombos = [];
+        
+        // ===========================================
+        // UTILITY FUNCTIONS
+        // ===========================================
+        
+        function toggleSection(header) {
+            const section = header.closest('.section');
+            section.classList.toggle('collapsed');
+        }
+        
+        function updateScalingDisplays() {
+            const enemyCount = parseInt(document.getElementById('enemyCount').value) || 1;
+            const singleTargetDPS = parseFloat(document.getElementById('singleTargetDPS').value) || 1000000;
+            
+            const primaryFactor = parseFloat(document.getElementById('primaryScaling').value);
+            const aoeSkillFactor = parseFloat(document.getElementById('aoeSkillScaling').value);
+            const otherFactor = parseFloat(document.getElementById('otherScaling').value);
+            
+            const primaryScaling = 1 + (enemyCount - 1) * primaryFactor;
+            const singleSkillScaling = 1;
+            const aoeSkillScaling = 1 + (enemyCount - 1) * aoeSkillFactor;
+            const otherScaling = 1 + (enemyCount - 1) * otherFactor;
+            
+            const primaryPercent = parseFloat(document.getElementById('primaryPercent').value) || 0;
+            const singleSkillPercent = parseFloat(document.getElementById('singleSkillPercent').value) || 0;
+            const aoeSkillPercent = parseFloat(document.getElementById('aoeSkillPercent').value) || 0;
+            const otherPercent = parseFloat(document.getElementById('otherPercent').value) || 0;
+            
+            const primaryEffective = primaryPercent * primaryScaling;
+            const singleSkillEffective = singleSkillPercent * singleSkillScaling;
+            const aoeSkillEffective = aoeSkillPercent * aoeSkillScaling;
+            const otherEffective = otherPercent * otherScaling;
+            
+            const totalEffective = primaryEffective + singleSkillEffective + aoeSkillEffective + otherEffective;
+            const totalMultiplier = totalEffective / 100;
+            
+            document.getElementById('primaryScalingDisplay').textContent = primaryScaling.toFixed(2) + 'x';
+            document.getElementById('singleSkillScalingDisplay').textContent = singleSkillScaling.toFixed(2) + 'x';
+            document.getElementById('aoeSkillScalingDisplay').textContent = aoeSkillScaling.toFixed(2) + 'x';
+            document.getElementById('otherScalingDisplay').textContent = otherScaling.toFixed(2) + 'x';
+            
+            document.getElementById('primaryEffectiveDisplay').textContent = primaryEffective.toFixed(0) + '%';
+            document.getElementById('singleSkillEffectiveDisplay').textContent = singleSkillEffective.toFixed(0) + '%';
+            document.getElementById('aoeSkillEffectiveDisplay').textContent = aoeSkillEffective.toFixed(0) + '%';
+            document.getElementById('otherEffectiveDisplay').textContent = otherEffective.toFixed(0) + '%';
+            
+            document.getElementById('scalingBreakdown').innerHTML = `
+                <div>Primary: ${primaryPercent}% × ${primaryScaling.toFixed(2)} = <strong style="color: var(--accent-color);">${primaryEffective.toFixed(0)}%</strong></div>
+                <div>Single-Target: ${singleSkillPercent}% × ${singleSkillScaling.toFixed(2)} = <strong style="color: var(--accent-color);">${singleSkillEffective.toFixed(0)}%</strong></div>
+                <div>AoE Skills: ${aoeSkillPercent}% × ${aoeSkillScaling.toFixed(2)} = <strong style="color: var(--accent-color);">${aoeSkillEffective.toFixed(0)}%</strong></div>
+                <div>Other: ${otherPercent}% × ${otherScaling.toFixed(2)} = <strong style="color: var(--accent-color);">${otherEffective.toFixed(0)}%</strong></div>
+            `;
+            
+            const effectiveMultiDPS = singleTargetDPS * totalMultiplier;
+            document.getElementById('totalScalingDisplay').textContent = 
+                `Effective Multi-Target DPS: ${Math.round(effectiveMultiDPS).toLocaleString()} (${totalMultiplier.toFixed(2)}x)`;
+        }
+        
+        function updateAttackSpeedDisplay() {
+            const baseSpeed = parseFloat(document.getElementById('druidForm').value) || 1.5;
+            const mod = parseFloat(document.getElementById('attackSpeedMod').value) || 0;
+            const effective = baseSpeed * (1 + mod / 100);
+            document.getElementById('effectiveAttackSpeedDisplay').textContent = effective.toFixed(2) + '/sec';
+        }
+        
+        // ===========================================
+        // UI FUNCTIONS
+        // ===========================================
+        
+        function initializeGemToggles() {
+            const container = document.getElementById('gemToggles');
+            container.innerHTML = '';
+            
+            Object.entries(GEM_DATA).forEach(([key, gem]) => {
+                const div = document.createElement('div');
+                div.className = 'gem-toggle';
+                div.id = `toggle-${key}`;
+                div.onclick = () => toggleGem(key);
+                
+                const starClass = gem.stars === 2 ? 'two-star' : '';
+                const stars = '★'.repeat(gem.stars);
+                
+                div.innerHTML = `
+                    <input type="checkbox" id="check-${key}" onclick="event.stopPropagation(); toggleGem('${key}')" />
+                    <div class="gem-info">
+                        <div class="gem-name ${starClass}">${gem.name} <span class="gem-stars ${starClass}">${stars}</span></div>
+                        <div class="gem-bonus" id="bonus-${key}">Loading...</div>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+            
+            updateGemBonusDisplays();
+        }
+        
+        function toggleGem(key) {
+            if (activeGems.has(key)) {
+                activeGems.delete(key);
+            } else {
+                activeGems.add(key);
+            }
+            
+            const toggle = document.getElementById(`toggle-${key}`);
+            const checkbox = document.getElementById(`check-${key}`);
+            
+            if (activeGems.has(key)) {
+                toggle.classList.add('active');
+                checkbox.checked = true;
+            } else {
+                toggle.classList.remove('active');
+                checkbox.checked = false;
+            }
+            
+            updateActiveCount();
+            if (document.getElementById('results').style.display !== 'none') {
+                calculateAll();
+            }
+        }
+        
+        function updateActiveCount() {
+            document.getElementById('activeCount').textContent = `${activeGems.size} Gems Active`;
+        }
+        
+        function selectPreset(preset) {
+            activeGems.clear();
+            
+            if (preset === 'all') {
+                Object.keys(GEM_DATA).forEach(g => activeGems.add(g));
+            }
+            
+            Object.keys(GEM_DATA).forEach(key => {
+                const toggle = document.getElementById(`toggle-${key}`);
+                const checkbox = document.getElementById(`check-${key}`);
+                if (activeGems.has(key)) {
+                    toggle.classList.add('active');
+                    checkbox.checked = true;
+                } else {
+                    toggle.classList.remove('active');
+                    checkbox.checked = false;
+                }
+            });
+            
+            updateActiveCount();
+        }
+        
+        function getStats() {
+            const baseSpeed = parseFloat(document.getElementById('druidForm').value) || 2.0;
+            const asMod = parseFloat(document.getElementById('attackSpeedMod').value) || 0;
+            const effectiveAS = baseSpeed * (1 + asMod / 100);
+            
+            return {
+                baseDamage: parseFloat(document.getElementById('baseDamage').value) || 41000,
+                singleTargetDPS: parseFloat(document.getElementById('singleTargetDPS').value) || 1000000,
+                critChance: parseFloat(document.getElementById('critChance').value) || 30,
+                critDamage: parseFloat(document.getElementById('critDamage').value) || 200,
+                currentLifePercent: parseFloat(document.getElementById('currentLifePercent').value) || 85,
+                maxHP: parseFloat(document.getElementById('maxHP').value) || 750000,
+                attackSpeed: effectiveAS,
+                primaryPercent: parseFloat(document.getElementById('primaryPercent').value) || 50,
+                enemyCount: parseInt(document.getElementById('enemyCount').value) || 1,
+                hasBuffSkill: document.getElementById('hasBuffSkill').checked,
+                hasDashSkill: document.getElementById('hasDashSkill').checked,
+                hasVithus: document.getElementById('hasVithus').checked,
+                hasFeastingBaron: document.getElementById('hasFeastingBaron').checked,
+                fightingElites: document.getElementById('fightingElites').checked,
+                hasDoTSource: document.getElementById('hasDoTSource').checked,
+                dotUptime: parseFloat(document.getElementById('dotUptime').value) || 70,
+                isStrife: document.getElementById('isStrife').checked,
+                gemRank5Star: parseInt(document.getElementById('gemRank5Star').value) || 10,
+                gemRank2Star: parseInt(document.getElementById('gemRank2Star').value) || 10,
+                gemFilter: document.getElementById('gemFilter').value || 'all',
+                primaryHitsPerAttack: parseFloat(document.getElementById('primaryHitsPerAttack').value) || 1,
+                additionalSingleHits: parseFloat(document.getElementById('additionalSingleHits').value) || 8,
+                additionalAoeHits: parseFloat(document.getElementById('additionalAoeHits').value) || 6,
+                hitFrequency: parseFloat(document.getElementById('hitFrequency').value) || 3
+            };
+        }
+        
+        // Helper to get the correct rank for a gem based on its star rating
+        function getGemRank(gem, stats) {
+            return gem.stars === 5 ? stats.gemRank5Star : stats.gemRank2Star;
+        }
+        
+        function updateGemBonusDisplays() {
+            const stats = getStats();
+            
+            Object.entries(GEM_DATA).forEach(([key, gem]) => {
+                const bonusEl = document.getElementById(`bonus-${key}`);
+                if (bonusEl) {
+                    const rank = getGemRank(gem, stats);
+                    bonusEl.textContent = gem.getDescription(rank, stats.isStrife, stats);
+                }
+            });
+        }
+        
+        // ===========================================
+        // CALCULATION ENGINE
+        // ===========================================
+        
+        function calculateAll() {
+            const stats = getStats();
+            const baseDPS = stats.singleTargetDPS;
+            
+            let totalLegBonus = 0;
+            let totalDirectDPS = 0;
+            const gemContributions = [];
+            
+            activeGems.forEach(key => {
+                const gem = GEM_DATA[key];
+                const rank = getGemRank(gem, stats);
+                totalLegBonus += gem.getLegBonus(rank, stats.isStrife, stats);
+                totalDirectDPS += gem.getDirectDPS(rank, stats.isStrife, stats);
+            });
+            
+            const legMod = 1 + (totalLegBonus / 100);
+            
+            Object.entries(GEM_DATA).forEach(([key, gem]) => {
+                const isActive = activeGems.has(key);
+                const rank = getGemRank(gem, stats);
+                const legBonus = gem.getLegBonus(rank, stats.isStrife, stats);
+                const directDPS = gem.getDirectDPS(rank, stats.isStrife, stats);
+                
+                let incrementalDPS;
+                let incrementalPercent;
+                
+                if (isActive) {
+                    const newLegBonus = totalLegBonus - legBonus;
+                    const newLegMod = 1 + (newLegBonus / 100);
+                    const newDirectDPS = totalDirectDPS - directDPS;
+                    const newTotal = (baseDPS + newDirectDPS) * newLegMod;
+                    const currentTotal = (baseDPS + totalDirectDPS) * legMod;
+                    incrementalDPS = currentTotal - newTotal;
+                    incrementalPercent = (incrementalDPS / baseDPS) * 100;
+                } else {
+                    const newLegBonus = totalLegBonus + legBonus;
+                    const newLegMod = 1 + (newLegBonus / 100);
+                    const newDirectDPS = totalDirectDPS + directDPS;
+                    const newTotal = (baseDPS + newDirectDPS) * newLegMod;
+                    const currentTotal = (baseDPS + totalDirectDPS) * legMod;
+                    incrementalDPS = newTotal - currentTotal;
+                    incrementalPercent = (incrementalDPS / baseDPS) * 100;
+                }
+                
+                gemContributions.push({
+                    key,
+                    name: gem.name,
+                    stars: gem.stars,
+                    isActive,
+                    legBonus,
+                    directDPS,
+                    incrementalDPS,
+                    incrementalPercent
+                });
+            });
+            
+            gemContributions.sort((a, b) => b.incrementalDPS - a.incrementalDPS);
+            
+            const totalDPSWithGems = (baseDPS + totalDirectDPS) * legMod;
+            const totalDPSGain = totalDPSWithGems - baseDPS;
+            const totalPercentGain = (totalDPSGain / baseDPS) * 100;
+            
+            displayResults(stats, {
+                baseDPS,
+                totalLegBonus,
+                legMod,
+                totalDirectDPS,
+                totalDPSWithGems,
+                totalDPSGain,
+                totalPercentGain,
+                gemContributions
+            });
+        }
+        
+        function displayResults(stats, results) {
+            document.getElementById('results').style.display = 'block';
+            
+            document.getElementById('bucketDisplay').innerHTML = `
+                <div class="bucket-item leg">
+                    <div class="bucket-label">LEG_mod (Gem Bonuses)</div>
+                    <div class="bucket-value">${results.legMod.toFixed(3)}x</div>
+                    <div class="bucket-breakdown">+${results.totalLegBonus.toFixed(1)}% from ${activeGems.size} gems</div>
+                </div>
+                <div class="bucket-item total">
+                    <div class="bucket-label">Direct Gem DPS (×LEG)</div>
+                    <div class="bucket-value">+${Math.round(results.totalDirectDPS * results.legMod).toLocaleString()}</div>
+                    <div class="bucket-breakdown">Raw: ${Math.round(results.totalDirectDPS).toLocaleString()} × ${results.legMod.toFixed(3)}</div>
+                </div>
+                <div class="bucket-item total">
+                    <div class="bucket-label">Total DPS</div>
+                    <div class="bucket-value">${Math.round(results.totalDPSWithGems).toLocaleString()}</div>
+                    <div class="bucket-breakdown">+${results.totalPercentGain.toFixed(1)}% vs baseline</div>
+                </div>
+            `;
+            
+            document.getElementById('formulaDisplay').innerHTML = `
+                <div class="formula-line">
+                    <span class="gen">Base DPS</span> = ${results.baseDPS.toLocaleString()} (no gems)
+                </div>
+                <div class="formula-line">
+                    <span class="leg">LEG_mod</span> = 1 + (${results.totalLegBonus.toFixed(1)}% / 100) = <strong>${results.legMod.toFixed(3)}</strong>
+                </div>
+                <div class="formula-line">
+                    <span class="eff">Direct DPS (raw)</span> = ${Math.round(results.totalDirectDPS).toLocaleString()}
+                </div>
+                <div class="formula-line">
+                    <span class="result">Total DPS</span> = (${results.baseDPS.toLocaleString()} + ${Math.round(results.totalDirectDPS).toLocaleString()}) × ${results.legMod.toFixed(3)} = <strong>${Math.round(results.totalDPSWithGems).toLocaleString()}</strong>
+                </div>
+            `;
+            
+            document.getElementById('resultsGrid').innerHTML = `
+                <div class="result-item">
+                    <div class="result-label">Baseline DPS</div>
+                    <div class="result-value">${results.baseDPS.toLocaleString()}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">With Gems</div>
+                    <div class="result-value highlight">${Math.round(results.totalDPSWithGems).toLocaleString()}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">DPS Gained</div>
+                    <div class="result-value">+${Math.round(results.totalDPSGain).toLocaleString()}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">% Increase</div>
+                    <div class="result-value highlight">+${results.totalPercentGain.toFixed(1)}%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Mode</div>
+                    <div class="result-value" style="color: ${stats.isStrife ? 'var(--strife-color)' : 'var(--accent-color)'}">
+                        ${stats.isStrife ? '⚔️ Strife' : 'PVE'}
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Gem Ranks</div>
+                    <div class="result-value" style="font-size: 1em;">
+                        <span style="color: var(--gold-color);">5★ R${stats.gemRank5Star}</span> / 
+                        <span style="color: var(--silver-color);">2★ R${stats.gemRank2Star}</span>
+                    </div>
+                </div>
+            `;
+            
+            let rankingsHTML = '';
+            results.gemContributions.forEach((gem, index) => {
+                const isTop3 = index < 3;
+                const statusClass = gem.isActive ? 'active' : 'inactive';
+                const starClass = gem.stars === 2 ? 'two-star' : '';
+                const valueClass = gem.incrementalDPS >= 0 ? 'positive' : 'negative';
+                const sign = gem.incrementalDPS >= 0 ? '+' : '';
+                
+                rankingsHTML += `
+                    <div class="gem-rank-item ${isTop3 ? 'top-3' : ''} ${statusClass}">
+                        <div class="rank-number">#${index + 1}</div>
+                        <div class="gem-rank-info">
+                            <div class="name ${starClass}">${gem.name} ${'★'.repeat(gem.stars)}</div>
+                            <div class="type">${gem.isActive ? '✓ Active' : '○ Inactive'} | LEG: +${gem.legBonus.toFixed(1)}% | Direct: +${Math.round(gem.directDPS).toLocaleString()}</div>
+                        </div>
+                        <div class="gem-rank-value ${valueClass}">
+                            <div class="value">${sign}${Math.round(gem.incrementalDPS).toLocaleString()}</div>
+                            <div class="label">Total Value</div>
+                        </div>
+                        <div class="gem-rank-value ${valueClass}">
+                            <div class="value">${sign}${gem.incrementalPercent.toFixed(2)}%</div>
+                            <div class="label">% of Base</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('gemRankings').innerHTML = rankingsHTML;
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // ===========================================
+        // OPTIMAL GEM FINDER
+        // ===========================================
+        
+        function* combinations(arr, k) {
+            if (k === 0) { yield []; return; }
+            if (arr.length < k) return;
+            const [first, ...rest] = arr;
+            for (const combo of combinations(rest, k - 1)) {
+                yield [first, ...combo];
+            }
+            yield* combinations(rest, k);
+        }
+        
+        function calculateComboValue(gemKeys, stats) {
+            let totalLegBonus = 0;
+            let totalDirectDPS = 0;
+            
+            gemKeys.forEach(key => {
+                const gem = GEM_DATA[key];
+                const rank = getGemRank(gem, stats);
+                totalLegBonus += gem.getLegBonus(rank, stats.isStrife, stats);
+                totalDirectDPS += gem.getDirectDPS(rank, stats.isStrife, stats);
+            });
+            
+            const legMod = 1 + (totalLegBonus / 100);
+            const totalDPS = (stats.singleTargetDPS + totalDirectDPS) * legMod;
+            
+            return { totalDPS, legMod, totalLegBonus, totalDirectDPS, gemKeys };
+        }
+        
+        async function findOptimal8() {
+            const stats = getStats();
+            
+            // Filter gems based on selection
+            let gemKeys = Object.keys(GEM_DATA);
+            let filterLabel = 'All Gems';
+            
+            if (stats.gemFilter === '5star') {
+                gemKeys = gemKeys.filter(key => GEM_DATA[key].stars === 5);
+                filterLabel = '5★ Only';
+            } else if (stats.gemFilter === '2star') {
+                gemKeys = gemKeys.filter(key => GEM_DATA[key].stars === 2);
+                filterLabel = '2★ Only';
+            }
+            
+            // Determine target count (max 8, or all available if fewer)
+            const targetCount = Math.min(8, gemKeys.length);
+            
+            // Calculate total combinations
+            const factorial = (n) => n <= 1 ? 1 : n * factorial(n - 1);
+            const nCr = (n, r) => factorial(n) / (factorial(r) * factorial(n - r));
+            const totalCombinations = nCr(gemKeys.length, targetCount);
+            
+            document.getElementById('optimizerResults').style.display = 'block';
+            document.getElementById('optimizerStatus').innerHTML = `
+                <strong>🔄 Calculating optimal ${targetCount}-gem loadout...</strong><br>
+                Filter: <span style="color: var(--gold-color);">${filterLabel}</span> (${gemKeys.length} gems)<br>
+                Testing ${gemKeys.length} choose ${targetCount} = ${totalCombinations.toLocaleString()} combinations
+            `;
+            document.getElementById('optimizerOutput').innerHTML = '';
+            
+            await new Promise(r => setTimeout(r, 50));
+            
+            const allCombos = [];
+            let tested = 0;
+            
+            for (const combo of combinations(gemKeys, targetCount)) {
+                allCombos.push(calculateComboValue(combo, stats));
+                tested++;
+            }
+            
+            allCombos.sort((a, b) => b.totalDPS - a.totalDPS);
+            
+            const topCombos = allCombos.slice(0, 10);
+            const bestCombo = topCombos[0];
+            
+            window.lastOptimalCombo = bestCombo;
+            window.lastTopCombos = topCombos;
+            
+            const baselineDPS = stats.singleTargetDPS;
+            const dpsGain = bestCombo.totalDPS - baselineDPS;
+            const percentGain = (dpsGain / baselineDPS) * 100;
+            
+            document.getElementById('optimizerStatus').innerHTML = `
+                <strong>✅ Analysis Complete!</strong> Tested ${tested.toLocaleString()} combinations<br>
+                Filter: <span style="color: var(--gold-color);">${filterLabel}</span> | 
+                5★ Rank: ${stats.gemRank5Star} | 2★ Rank: ${stats.gemRank2Star}<br>
+                Found optimal loadout with <strong style="color: var(--gold-color);">+${percentGain.toFixed(1)}%</strong> DPS increase
+            `;
+            
+            let outputHTML = `
+                <div style="background: linear-gradient(145deg, #3a3a30, #444430); padding: 20px; border-radius: 10px; margin-top: 15px; border: 2px solid var(--gold-color);">
+                    <h3 style="color: var(--gold-color); margin-bottom: 15px;">🏆 #1 Optimal Loadout (${filterLabel})</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 15px;">
+            `;
+            
+            bestCombo.gemKeys.forEach(key => {
+                const gem = GEM_DATA[key];
+                const rank = getGemRank(gem, stats);
+                const legBonus = gem.getLegBonus(rank, stats.isStrife, stats);
+                const directDPS = gem.getDirectDPS(rank, stats.isStrife, stats);
+                
+                outputHTML += `
+                    <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px;">
+                        <div style="color: ${gem.stars === 2 ? 'var(--silver-color)' : 'var(--secondary-color)'}; font-weight: bold;">
+                            ${gem.name} ${'★'.repeat(gem.stars)}
+                        </div>
+                        <div style="font-size: 0.8em; color: #888;">Rank ${rank}</div>
+                        <div style="font-size: 0.85em; color: var(--leg-color);">+${legBonus.toFixed(1)}% LEG</div>
+                        <div style="font-size: 0.85em; color: var(--eff-color);">+${Math.round(directDPS).toLocaleString()} direct</div>
+                    </div>
+                `;
+            });
+            
+            outputHTML += `
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="color: #888; font-size: 0.8em;">LEG_mod</div>
+                            <div style="color: var(--leg-color); font-size: 1.3em; font-weight: bold;">${bestCombo.legMod.toFixed(3)}x</div>
+                        </div>
+                        <div>
+                            <div style="color: #888; font-size: 0.8em;">Direct DPS</div>
+                            <div style="color: var(--eff-color); font-size: 1.3em; font-weight: bold;">+${Math.round(bestCombo.totalDirectDPS).toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div style="color: #888; font-size: 0.8em;">Total DPS</div>
+                            <div style="color: var(--gold-color); font-size: 1.3em; font-weight: bold;">${Math.round(bestCombo.totalDPS).toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div style="color: #888; font-size: 0.8em;">vs Baseline</div>
+                            <div style="color: var(--accent-color); font-size: 1.3em; font-weight: bold;">+${percentGain.toFixed(1)}%</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <button onclick="applyOptimalLoadout(0)" style="margin: 0;">✅ Apply This Loadout</button>
+                    </div>
+                </div>
+            `;
+            
+            outputHTML += `
+                <h3 style="color: var(--purple-color); margin: 20px 0 15px 0;">📊 Top 10 Loadouts</h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #444;">
+                                <th style="padding: 10px; text-align: left; color: #888;">Rank</th>
+                                <th style="padding: 10px; text-align: left; color: #888;">Gems</th>
+                                <th style="padding: 10px; text-align: right; color: var(--leg-color);">LEG_mod</th>
+                                <th style="padding: 10px; text-align: right; color: var(--eff-color);">Direct</th>
+                                <th style="padding: 10px; text-align: right; color: var(--gold-color);">Total DPS</th>
+                                <th style="padding: 10px; text-align: right; color: #888;">vs #1</th>
+                                <th style="padding: 10px; text-align: center; color: #888;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            topCombos.forEach((combo, idx) => {
+                const gemNames = combo.gemKeys.map(k => {
+                    const gem = GEM_DATA[k];
+                    const abbrev = gem.name.split(' ').map(w => w[0]).join('');
+                    return `<span title="${gem.name}" style="color: ${gem.stars === 2 ? 'var(--silver-color)' : 'var(--secondary-color)'};">${abbrev}</span>`;
+                }).join(', ');
+                
+                const diff = combo.totalDPS - topCombos[0].totalDPS;
+                const diffStr = idx === 0 ? '—' : `${Math.round(diff).toLocaleString()}`;
+                const rowBg = idx === 0 ? 'rgba(255, 215, 0, 0.1)' : 'transparent';
+                
+                outputHTML += `
+                    <tr style="border-bottom: 1px solid #333; background: ${rowBg};">
+                        <td style="padding: 10px; font-weight: bold; color: ${idx === 0 ? 'var(--gold-color)' : '#666'};">#${idx + 1}</td>
+                        <td style="padding: 10px;">${gemNames}</td>
+                        <td style="padding: 10px; text-align: right;">${combo.legMod.toFixed(3)}x</td>
+                        <td style="padding: 10px; text-align: right;">+${Math.round(combo.totalDirectDPS).toLocaleString()}</td>
+                        <td style="padding: 10px; text-align: right; font-weight: bold;">${Math.round(combo.totalDPS).toLocaleString()}</td>
+                        <td style="padding: 10px; text-align: right; color: ${diff < 0 ? 'var(--strife-color)' : '#666'};">${diffStr}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button onclick="applyOptimalLoadout(${idx})" style="padding: 5px 10px; font-size: 0.75em; margin: 0;">Apply</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            outputHTML += `
+                        </tbody>
+                    </table>
+                </div>
+                <p style="color: #666; font-size: 0.85em; margin-top: 10px;">Hover over abbreviations to see full gem names</p>
+            `;
+            
+            document.getElementById('optimizerOutput').innerHTML = outputHTML;
+            document.getElementById('optimizerResults').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function applyOptimalLoadout(comboIndex) {
+            const combo = comboIndex === 0 ? window.lastOptimalCombo : window.lastTopCombos[comboIndex];
+            if (!combo) return;
+            
+            activeGems.clear();
+            combo.gemKeys.forEach(key => activeGems.add(key));
+            
+            Object.keys(GEM_DATA).forEach(key => {
+                const toggle = document.getElementById(`toggle-${key}`);
+                const checkbox = document.getElementById(`check-${key}`);
+                if (activeGems.has(key)) {
+                    toggle.classList.add('active');
+                    checkbox.checked = true;
+                } else {
+                    toggle.classList.remove('active');
+                    checkbox.checked = false;
+                }
+            });
+            
+            updateActiveCount();
+            calculateAll();
+        }
+        
+        // ===========================================
+        // EVENT LISTENERS
+        // ===========================================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGemToggles();
+            
+            // Strife toggle
+            document.getElementById('isStrife').addEventListener('change', function() {
+                document.getElementById('strifeIndicator').style.display = this.checked ? 'inline-block' : 'none';
+                updateGemBonusDisplays();
+            });
+            
+            // 5-Star gem rank slider
+            document.getElementById('gemRank5Star').addEventListener('input', function() {
+                document.getElementById('gemRank5StarDisplay').textContent = 'Rank ' + this.value;
+                updateGemBonusDisplays();
+            });
+            
+            // 2-Star gem rank slider
+            document.getElementById('gemRank2Star').addEventListener('input', function() {
+                document.getElementById('gemRank2StarDisplay').textContent = 'Rank ' + this.value;
+                updateGemBonusDisplays();
+            });
+            
+            // Gem filter dropdown
+            document.getElementById('gemFilter').addEventListener('change', function() {
+                // Update the count display based on selection
+                const counts = { all: 22, '5star': 19, '2star': 3 };
+                // Could add visual feedback here if desired
+            });
+            
+            // Life slider
+            document.getElementById('currentLifePercent').addEventListener('input', function() {
+                document.getElementById('lifeDisplay').textContent = this.value + '%';
+                updateGemBonusDisplays();
+            });
+            
+            // DoT uptime slider
+            document.getElementById('dotUptime').addEventListener('input', function() {
+                document.getElementById('dotUptimeDisplay').textContent = this.value + '%';
+                updateGemBonusDisplays();
+            });
+            
+            // Attack speed inputs
+            document.getElementById('druidForm').addEventListener('change', updateAttackSpeedDisplay);
+            document.getElementById('attackSpeedMod').addEventListener('input', updateAttackSpeedDisplay);
+            updateAttackSpeedDisplay();
+            
+            // Primary hits slider
+            document.getElementById('primaryHitsPerAttack').addEventListener('input', function() {
+                document.getElementById('primaryHitsDisplay').textContent = this.value + 'x';
+            });
+            
+            // Additional hits sliders
+            document.getElementById('additionalSingleHits').addEventListener('input', function() {
+                document.getElementById('additionalSingleDisplay').textContent = this.value + '/s';
+            });
+            
+            document.getElementById('additionalAoeHits').addEventListener('input', function() {
+                document.getElementById('additionalAoeDisplay').textContent = this.value + '/s';
+            });
+            
+            // Multi-target scaling inputs
+            const scalingInputs = ['enemyCount', 'primaryPercent', 'singleSkillPercent', 'aoeSkillPercent', 'otherPercent',
+                                   'primaryScaling', 'aoeSkillScaling', 'otherScaling', 'singleTargetDPS'];
+            scalingInputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', updateScalingDisplays);
+                document.getElementById(id).addEventListener('change', updateScalingDisplays);
+            });
+            
+            // Percentage inputs auto-calculate Other %
+            const percentageInputs = ['primaryPercent', 'singleSkillPercent', 'aoeSkillPercent'];
+            percentageInputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', () => {
+                    const primary = parseFloat(document.getElementById('primaryPercent').value) || 0;
+                    const single = parseFloat(document.getElementById('singleSkillPercent').value) || 0;
+                    const aoe = parseFloat(document.getElementById('aoeSkillPercent').value) || 0;
+                    const other = Math.max(0, 100 - primary - single - aoe);
+                    document.getElementById('otherPercent').value = other;
+                    updateScalingDisplays();
+                });
+            });
+            
+            // Other inputs that affect calculations
+            ['baseDamage', 'singleTargetDPS', 'critChance', 'critDamage', 'hasBuffSkill', 'hasDashSkill', 'hasVithus', 
+             'hasFeastingBaron', 'fightingElites', 'hasDoTSource'].forEach(id => {
+                document.getElementById(id).addEventListener('change', updateGemBonusDisplays);
+            });
+            
+            // Initialize scaling display
+            updateScalingDisplays();
+            updateActiveCount();
+        });
+    </script>
+</body>
+</html>
