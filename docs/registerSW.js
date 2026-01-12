@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/DI_gem_calc/sw.js', { scope: '/DI_gem_calc/' })})}
